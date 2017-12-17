@@ -35,11 +35,13 @@ col = 0
 '''
 Formating of a file
 '''
-bold = workbook.add_format({'bold': True})
-money_format = workbook.add_format({'num_format': '##,##,##,##,##0'})
+bold = workbook.add_format({'bold': True, 'text_wrap':'true'})
+money_format = workbook.add_format({'num_format': '##,##,##,##,##0', 'text_wrap':'true'})
 bold_border = workbook.add_format({'bold':True})
-side_border = workbook.add_format()
-left_border = workbook.add_format()
+side_border = workbook.add_format({'text_wrap':'true'})
+left_border = workbook.add_format({'text_wrap':'true'})
+bottom_border = workbook.add_format({'text_wrap':'true'})
+left_bottom_border = workbook.add_format({'text_wrap':'true'})
 '''
 Defining the heading of the excel sheets
 '''
@@ -91,11 +93,35 @@ while nextLine == "Y" or nextLine == "y":
 		serialNumber += 1
 	nextLine = raw_input("Press Y/y to make a new entry. ")
 
-worksheet.write(row, col, left_border)
-worksheet.write(row, col + 5, "Total:", bold_border)
+worksheet.write(row, col,"", left_border)
+worksheet.write(row, col + 5, "Total\n(Base cost):", bold_border)
 worksheet.write_number(row, col + 6, totalAmount, money_format)
+money_format.set_border()
+
+row += 1
+
+worksheet.write(row, col,"", left_border)
+worksheet.write(row, col + 5, "GST:", bold_border)
+worksheet.write_number(row, col + 6, tax, money_format)
+money_format.set_border()
+
+row += 1
+
+worksheet.write(row, col, "", left_bottom_border)
+worksheet.write(row, col + 1, "", bottom_border)
+worksheet.write(row, col + 2, "", bottom_border)
+worksheet.write(row, col + 3, "", bottom_border)
+worksheet.write(row, col + 4, "", bottom_border)
+worksheet.write(row, col + 5, "Total\n(With GST):", bold_border)
+worksheet.write_number(row, col + 6, totalAmount + tax, money_format)
+
 bold_border.set_border()
 side_border.set_left()
 side_border.set_right()
 side_border.set_bottom()
+left_border.set_left()
+left_bottom_border.set_left()
+left_bottom_border.set_bottom()
+bottom_border.set_bottom()
+money_format.set_border()
 workbook.close()
